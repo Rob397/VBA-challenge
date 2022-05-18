@@ -1,0 +1,134 @@
+
+'Instructions
+
+
+'Create a script that will loop through all the stocks for one year and output the following information.
+
+
+'The ticker symbol.
+
+
+'Yearly change from opening price at the beginning of a given year to the closing price at the end of that year.
+
+
+'The percent change from opening price at the beginning of a given year to the closing price at the end of that year.
+
+
+'The total stock volume of the stock.
+
+
+'You should also have conditional formatting that will highlight positive change in green and negative change in red.
+
+Sub stock()
+ 'count number of work sheets
+ WS_Count = ActiveWorkbook.Worksheets.Count
+ 
+ 
+ Cells(1, 9).Value = "Stock"
+ Cells(1, 10).Value = "Yearly change"
+ Cells(1, 11).Value = "Total Volume"
+ Cells(1, 12).Value = "Percentage Change"
+  
+  ' Set an initial variable for the stock name
+  Dim stock_ticker As String
+
+  ' Set an initial variable for the total trading volume per year
+  Dim trading_vol As Double
+  trading_vol = 0
+  
+  
+  'Set percent change of yearly price
+  Dim percent_change As Double
+   
+ 'Declare the Change in price variable
+  Dim change_price As Long
+   
+  'Keep track of the location for each ticker in the summary table
+  Dim Summary_Table_Row As Integer
+  Summary_Table_Row = 2
+  
+  'Set an itial variable for the open and closing price of the year
+  Dim closing_price As Double
+
+  Dim opening_price As Double
+  
+  Dim LastRow As Long, I As Long
+  LastRow = Cells(Rows.Count, 1).End(xlUp).Row
+  
+  
+ 'loop over all worksheets
+ For j = 1 To WS_Count
+
+  ' Loop through the stock volumes
+  For I = 2 To LastRow
+                                    
+   
+
+    'Check if we are still within the same stock ticker.
+    If Cells(I + 1, 1).Value <> Cells(I, 1).Value Then
+
+      ' Set the stock ticker
+      stock_ticker = Cells(I, 1).Value
+
+      ' Add to the volume total
+      trading_vol = trading_vol + Cells(I, 7).Value
+
+      ' Print the stock ticker in the Summary Table
+      Range("I" & Summary_Table_Row).Value = stock_ticker
+
+      ' Print the trading_vol to the Summary Table
+      Range("K" & Summary_Table_Row).Value = trading_vol
+
+      ' Add one to the summary table row
+      Summary_Table_Row = Summary_Table_Row + 1
+    
+    'Print the change in price in the summary table statistics
+    Range("J" & Summary_Table_Row).Value = change_price
+    
+    ' Reset the trading _volume
+      trading_vol = 0
+    
+
+    ' If the cell immediately following a row is the same ticker
+    Else
+
+      ' Add to the trading volume
+      trading_vol = trading_vol + Cells(I, 7).Value
+      
+    
+      closing_price = Cells(I + 1, 6).Value
+
+    
+     End If
+
+   Next I
+  
+  Next j
+
+End Sub
+
+
+
+
+Sub colours()
+end_of_colour = Cells(Rows.Count, 11).End(xlUp).Row
+
+For I = 2 To end_of_colour
+ If (Cells(I, 10) > 0) Then
+ 
+ 'colour the cells green
+
+  Cells(I, 10).Interior.ColorIndex = 4
+
+
+  'Otherwise color it red
+        Else
+
+        Cells(I, 10).Interior.ColorIndex = 3
+
+        End If
+     Next I
+End Sub
+
+
+
